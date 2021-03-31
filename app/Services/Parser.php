@@ -94,13 +94,13 @@ class Parser {
             $cols = $row->find('td');
             if ( 
                     count($cols) > 1
-                    && isset(
-                        $ownFieldList[$row->find('td')[0]->text()]
-                    )
+                    // && isset(
+                    //     $ownFieldList[$row->find('td')[0]->text()]
+                    // )
                 ) {
-                $announcement->$ownFieldList[$row->find('td')[0]->text()] = $ownFieldList[$row->find('td')[1]->text()];
+                // $announcement->$ownFieldList[$row->find('td')[0]->text()] = $ownFieldList[$row->find('td')[1]->text()];
                 // $announcement->testCount++;
-                $arr[] = $row->find('td')[1]->text();
+                $arr[] = $row->find('td')[0]->text();
             }
         }
 
