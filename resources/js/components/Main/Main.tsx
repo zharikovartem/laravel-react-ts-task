@@ -1,10 +1,14 @@
 import { Avatar, Button, List, Pagination, Spin } from 'antd'
 import React, { useState, useEffect } from 'react'
-import { LoadingOutlined } from '@ant-design/icons';
+import { LoadingOutlined } from '@ant-design/icons'
+import { OmitProps } from 'antd/lib/transfer/ListBody'
+import {MainPropsType} from './MainContainer'
 
 
-
-const Main: React.FC = () => {
+const Main: React.FC<MainPropsType> = (props) => {
+    useEffect( () => {
+        // Получить список объявлений
+    },[])
 
     const [pageSize, setPageSize] = useState<number>(10)
     const [page, setPage] = useState<number>(1)
@@ -12,6 +16,7 @@ const Main: React.FC = () => {
 
     const startParse = () => {
         setIsParse(!isParse)
+        props.startAnnouncementsParsing()
     }
 
     const onShowSizeChange = (current: number, size: number) => {
@@ -31,7 +36,7 @@ const Main: React.FC = () => {
                     {isParse ? <Spin indicator={antIcon} /> : <>Обновить список объявлений</>}
                     
                 </Button>
-                {isParse ? <h5 className="ml-auto mt-3">Получаем объявления 1 из 17689</h5> : null}
+                {isParse ? <h5 className="ml-auto mt-3">Получаем объявления {props.parsingPage} из {props.totalAnnouncementCountToParsing}</h5> : null}
             </div>
 
             <PaginationComponent onShowSizeChange={onShowSizeChange} pageSize={pageSize} onChange={onChange} current={page}/>
@@ -54,6 +59,13 @@ const Main: React.FC = () => {
             />
 
             <PaginationComponent onShowSizeChange={onShowSizeChange} pageSize={pageSize} onChange={onChange} current={page}/>
+
+            
+            <li>Создать абстракцию</li>
+            <li>Создать модель</li>
+            <li>Создать джоб</li>
+            <li>Создать парсер</li>
+            <li>Пробежать по вложенностям</li>
 
         </div>
     )

@@ -24,7 +24,6 @@ type DispatchPropsType = {
 
 const AppRouter: React.FC<MapPropsType & DispatchPropsType> = (props) => {
     useEffect( () => {
-        console.log('useEffect')
         props.getAuthUserData()
     },[])
     return(
@@ -53,7 +52,6 @@ let AppContainer = compose<React.ComponentType>(
     connect(mapStateToProps, { getAuthUserData }))(AppRouter)
 
 const App: React.FC = () => {
-    console.log(store.getState())
     return (
         <BrowserRouter>
             <Provider store={store}>

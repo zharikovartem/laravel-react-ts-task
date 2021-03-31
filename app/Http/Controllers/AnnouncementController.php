@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Announcement;
 use Illuminate\Http\Request;
+use App\Services\Parser;
 
 class AnnouncementController extends Controller
 {
@@ -14,7 +15,7 @@ class AnnouncementController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Announcement::get(), 200);
     }
 
     /**
@@ -83,10 +84,29 @@ class AnnouncementController extends Controller
         //
     }
 
-    public function startAnnouncementsParsing()
+    public function startAnnouncementsParsing(string $object, int $part = 0)
     {
+        
+
+        $className = "App\\".$object;
+        $test = new $className();
+
+        // dispatch(new AnnouncementsParsingJob([
+        //     'part'=>$part,
+        // ]));
+        // $className = 'App/' . $object;
+
+        $parser = new Parser($test);
+
         return response()->json([
             'message'=>'Parsing is started', 
+            'part'=>$part,
+            'object'=>$object,
+            'className'=>$className,
+            'announcementType'=>$test->getDescriptions(),
+            'getOwnFieldList'=>$test->getOwnFieldList(),
+            'getFillable'=>$test->getFillable(),
+            'parser'=>$parser->startParse()
         ], 200);
     }
 }

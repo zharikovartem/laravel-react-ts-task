@@ -1,7 +1,7 @@
 import {connect} from 'react-redux'
 import Main from './Main'
 import { AppStateType } from '../../redux/store'
-// import {register} from './../../redux/authReducer'
+import {startAnnouncementsParsing} from './../../redux/parserReducer'
 // import { RegisterFormType } from '../../api/authAPI'
 
 type OwnMainPropsType = {
@@ -11,19 +11,20 @@ type OwnMainPropsType = {
 type MapPropsType = ReturnType<typeof mapStateToProps>
 
 type MapDispatchPropsType = {
-    // register: (creds: RegisterFormType)=>void
+    startAnnouncementsParsing: ()=>void
 }
 
-export type RegisterPropsType = MapPropsType & MapDispatchPropsType & OwnMainPropsType
+export type MainPropsType = MapPropsType & MapDispatchPropsType & OwnMainPropsType
 
 let mapStateToProps = (state:AppStateType) => {
     return {
-
+        parsingPage: state.parser.parsingPage,
+        totalAnnouncementCountToParsing: state.parser.totalAnnouncementCountToParsing
     }
 }
 
 export default connect<MapPropsType, MapDispatchPropsType, OwnMainPropsType, AppStateType>(mapStateToProps, 
-    {}) 
+    {startAnnouncementsParsing}) 
     (Main)
     
 

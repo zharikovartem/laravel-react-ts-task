@@ -21,5 +21,5 @@ Route::post('login', 'Auth\LoginController@login');
 Route::post('register', 'Api\Auth\RegisterController@register');
 Route::get('authMe/{token}', 'Api\Auth\AuthController@authMe');
 
-Route::get('startAnnouncementsParsing', 'AnnouncementController@startAnnouncementsParsing');
+Route::get('startAnnouncementsParsing/{object}/{part?}', 'AnnouncementController@startAnnouncementsParsing');
 Route::resource('providers', 'AnnouncementController');

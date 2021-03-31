@@ -5,9 +5,19 @@ export type ParsingResponseType = {
     message: string
 }
 
+// declare module 'axios' {
+//     export interface AxiosRequestConfig {
+//         part?: number;
+//         objectType?: string
+//     }
+//   }
+
 export const parserAPI = {
     startAnnouncementsParsing() {
-        return instance.get<ParsingResponseType>(`startAnnouncementsParsing`)
+        const object:string = 'Announcement'
+        const part:number = 0
+        const params = {object, part}
+        return instance.get<ParsingResponseType>(`startAnnouncementsParsing/${object}/`+ part)
         .then(response => {
             console.log('startAnnouncementsParsing: ', response)
             return response.status === 200 ? response : null
@@ -21,5 +31,8 @@ export const parserAPI = {
             }
             return null
         })
+    },
+    getAnnouncements() {
+
     }
 }
