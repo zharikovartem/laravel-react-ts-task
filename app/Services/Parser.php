@@ -87,10 +87,24 @@ class Parser {
         $document = new Document($this->baseURL.$this->realtPrefix.'/object/'.$announcement->realt_id.'/', true);
         $rows = $document->find('tr');
 
+        $announcement->testCount = 0;
+        $arr = array();
+
         foreach ($rows as $key => $row) {
-            # code...
+            $cols = $row->find('td');
+            if ( 
+                    count($cols) > 1
+                    && isset(
+                        $ownFieldList[$row->find('td')[0]->text()]
+                    )
+                ) {
+                $announcement->$ownFieldList[$row->find('td')[0]->text()] = $ownFieldList[$row->find('td')[1]->text()];
+                // $announcement->testCount++;
+                $arr[] = $row->find('td')[1]->text();
+            }
         }
 
+        $announcement->rows = $arr;
         $announcement->testCount = count($rows);
         $announcement->url = $this->baseURL.$this->realtPrefix.'/object/'.$announcement->realt_id.'/';
 
