@@ -17,6 +17,18 @@ let initialState: InitialStateType = {
 
 const parserReducer = (state = initialState, action: ActionsTypes): InitialStateType => {
     switch (action.type) {
+        case 'SN/PARSER/SET_PARSING_COUNT':
+            console.log(action.count)
+            return{
+                ...state, 
+                totalAnnouncementCountToParsing: action.count
+            }
+
+        case 'SN/PARSER/SET_TOTAL_ANNOUNCEMENT_COUNT':
+            return{
+                ...state, 
+                totalAnnouncementCount: action.count
+            }
         case 'SN/AUTH/SET_AUTH_ERROR':
             return{
                 ...state, 
@@ -40,25 +52,19 @@ const parserReducer = (state = initialState, action: ActionsTypes): InitialState
 }
 
 export const actions = {
-    // setAuthUserData: (user: UserType | null, remember_token: string | null) => ({ type: 'SN/AUTH/SET_USER_DATA', user, remember_token } as const),
-    // logout: () => ({type: 'SN/AUTH/LOGOUT'} as const),
-    // changeSettings: (settingType: string, settings: SettingasInstanseType) => ({ type: 'SN/AUTH/SET_SETTINGS_DATA', settingType, settings } as const),
     setAuthError: (error: string) => ({type: 'SN/AUTH/SET_AUTH_ERROR', error } as const),
     setParsingPage: (part: number) => ({type: 'SN/PARSER/SET_PARSING_PAGE', part } as const),
     setAnnouncementsList: (announcementsList: Array<any>) => ({type: 'SN/PARSER/SET_AANOUNCRMENT_LIST', announcementsList } as const),
+    setTotalAnnouncementCount: (count: number) => ({type: 'SN/PARSER/SET_TOTAL_ANNOUNCEMENT_COUNT', count}as const),
+    setParsingCount: (count: number) => ({type: 'SN/PARSER/SET_PARSING_COUNT', count}as const),
 }
 
 export const startAnnouncementsParsing = (): ThunkType => {
     return async (dispatch, getState) => {
         let response = await parserAPI.startAnnouncementsParsing()
+        console.log(response.data.totalCount.count)
         dispatch(actions.setParsingPage(response.data.part+1))
-//         if (response) {
-//             if (response.status === 200) {
-//                 dispatch(actions.setAuthUserData(response.data.user, response.data.remember_token))
-//             } else {
-//                 dispatch(actions.setAuthError(response.data.message))
-//             }
-//         }
+        dispatch(actions.setParsingCount(response.data.totalCount.count))
     }
 }
 
@@ -66,13 +72,7 @@ export const getAnnouncements = (params: GetAnnouncementsParamsType):ThunkType =
     return async (dispatch, getState) => {
         let response = await parserAPI.getAnnouncements(params)
         dispatch(actions.setAnnouncementsList(response.data.announcementsList))
-//         if (response) {
-//             if (response.status === 200) {
-//                 dispatch(actions.setAuthUserData(response.data.user, response.data.remember_token))
-//             } else {
-//                 dispatch(actions.setAuthError(response.data.message))
-//             }
-//         }
+        dispatch(actions.setTotalAnnouncementCount(response.data.count))
     }
 }
 

@@ -1,4 +1,4 @@
-import { Avatar, Button, Empty, List, Pagination, Spin } from 'antd'
+import { Avatar, Button, Empty, List, message, Pagination, Spin } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { LoadingOutlined } from '@ant-design/icons'
 import { OmitProps } from 'antd/lib/transfer/ListBody'
@@ -11,7 +11,6 @@ const Main: React.FC<MainPropsType> = (props) => {
     const [isParse, setIsParse] = useState(false)
 
     useEffect( () => {
-        console.log('useEffect')
         props.getAnnouncements({
             count: 10,
             page: page-1,
@@ -45,6 +44,7 @@ const Main: React.FC<MainPropsType> = (props) => {
 
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
 
+    // console.log(props.totalAnnouncementCountToParsing)
     return (
         <div>
             <div className="w-100 d-flex flex-row-reverse">
@@ -55,7 +55,7 @@ const Main: React.FC<MainPropsType> = (props) => {
                 {isParse ? <h5 className="ml-auto mt-3">Получаем объявления {props.parsingPage} из {props.totalAnnouncementCountToParsing}</h5> : null}
             </div>
 
-            <PaginationComponent onShowSizeChange={onShowSizeChange} pageSize={pageSize} onChange={onChange} current={page}/>
+            <PaginationComponent onShowSizeChange={onShowSizeChange} pageSize={pageSize} onChange={onChange} current={page} total={props.totalAnnouncementCount}/>
 
             {props.announcementsList.length !== 0 ?
             <List
@@ -65,9 +65,19 @@ const Main: React.FC<MainPropsType> = (props) => {
                 itemLayout="horizontal"
                 dataSource={props.announcementsList}
                 renderItem={item => (
-                    <List.Item>
+                    <List.Item
+                        extra={
+                            item.image_url !== null ?
+                            <img
+                                width={272}
+                                alt="Empty"
+                                src={item.image_url}
+                            />
+                            : <div className="border h-100" style={{width: 272}}><Empty/></div>
+                        }
+                    >
                         <List.Item.Meta
-                            avatar={<Avatar shape="square" size="large" src={item.image_url} />}
+                            // avatar={<Avatar shape="square" size="large" src={item.image_url} alt="123"/>}
                             title={<a href="https://ant.design">{item.title}</a>}
                             description={item.desriptions}
                         />
@@ -76,7 +86,7 @@ const Main: React.FC<MainPropsType> = (props) => {
             />
             : <Empty /> }
 
-            <PaginationComponent onShowSizeChange={onShowSizeChange} pageSize={pageSize} onChange={onChange} current={page}/>
+            <PaginationComponent onShowSizeChange={onShowSizeChange} pageSize={pageSize} onChange={onChange} current={page} total={props.totalAnnouncementCount}/>
 
             
             <li><s>Создать абстракцию</s></li>
@@ -89,6 +99,8 @@ const Main: React.FC<MainPropsType> = (props) => {
             <li>Добавить params в index()</li>
             <li>Реализовать отображение</li>
             <li>Реализовать пагинацию</li>
+            <br/>
+            <li>Реализовать удаление при повторном проходе</li>
 
         </div>
     )
@@ -101,6 +113,7 @@ type PaginationComponentPropsType = {
     onChange: (page: number, pageSize: number | undefined)=>void,
     pageSize: number,
     current: number,
+    total: number,
 }
 const PaginationComponent: React.FC<PaginationComponentPropsType> = (props) => {
     return(
@@ -113,7 +126,7 @@ const PaginationComponent: React.FC<PaginationComponentPropsType> = (props) => {
             onShowSizeChange={props.onShowSizeChange}
             onChange={props.onChange}
             defaultCurrent={1}
-            total={500}
+            total={props.total}
         />
     )
 }

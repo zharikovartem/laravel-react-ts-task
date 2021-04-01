@@ -119,16 +119,14 @@ class AnnouncementController extends Controller
         // $className = 'App/' . $object;
 
         $parser = new Parser($test);
+        ;
 
         return response()->json([
-            'message'=>'Parsing is started', 
             'part'=>$part,
-            'object'=>$object,
-            'className'=>$className,
-            'announcementType'=>$test->getDescriptions(),
+            'totalCount'=>$parser->startParse(),
             'getOwnFieldList'=>$test->getOwnFieldList(),
             'getFillable'=>$test->getFillable(),
-            'parser'=>$parser->startParse()
+            // 'parser'=>$parser->startParse()
         ], 200);
     }
 }

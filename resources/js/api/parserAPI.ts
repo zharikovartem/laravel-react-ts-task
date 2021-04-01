@@ -43,8 +43,10 @@ export type AnnouncementType = {
 }
 
 export type GetAnnouncementsResponseType = {
-    announcementsList: Array<AnnouncementType>,
-    count: number
+    data: {
+        announcementsList: Array<AnnouncementType>,
+        count: number
+    }
 }
 
 export const parserAPI = {
@@ -72,7 +74,7 @@ export const parserAPI = {
         .then((response) => {
             console.log('getAnnouncements: ', response)
             return response
-        })
+        } ) 
         .catch(err => {
             if (err.response) {
                 console.log('getAnnouncements ERROR', err.response)

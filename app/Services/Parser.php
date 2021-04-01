@@ -4,36 +4,48 @@ namespace App\Services;
 
 use DiDom\Document;
 use App\Announcement;
+use App\Jobs\ParsingJob;
 
 class Parser {
     private $ownFieldList;
     private $realtPrefix;
     private $baseURL = 'https://realt.by/';
     private $partText = '?page=';
-    private $part;
+    public $part;
+    public $total;
+    private $document;
 
     public function __construct($class, $part = 0)
     {
         $this->ownFieldList = $class->getOwnFieldList();
         $this->realtPrefix = $class->getPrefix();
         $this->part = $part;
+        $this->getDocument();
+        $this->getTotalToParse();
+    }
+
+    public static function createParseJob()
+    {
+        dispatch( (new ParsingJob(null ,new Parser( new Announcement(), 1))) );
+
+        return 'ok';
     }
 
     public function startParse()
     {
-        $response['ownFieldList'] = $this->ownFieldList;
-        $response['realtPrefix'] = $this->realtPrefix;
-        $response['getHTML'] = $this->getAnnouncementList();
-
-        return $response;
+        // $parser = new Parser(new Announcement(), 1);
+        // $parser->getAnnouncementList();
+        // $this->getAnnouncementList();
+        dispatch( (new ParsingJob(null ,$this)) );
+        return [
+            'count'=>$this->total,
+            'url'=>$this->baseURL.$this->realtPrefix.$this->partText.$this->part
+        ];
     }
 
-    private function getAnnouncementList() {
+    public function getAnnouncementList() {
         $document = new Document($this->baseURL.$this->realtPrefix.$this->partText.$this->part, true);
         $table = $document->find('.listing-item ');
-
-        $total = (int)$document->find('.mt-sm')[1]->find('.fs-small')[0]->find('strong')[0]->text();
-        $resp['total'] = $total;
 
         foreach ($table  as $key => $item) {
             $desc = $item->find('.desc');
@@ -57,10 +69,13 @@ class Parser {
                 }
 
                 $announcement->realt_id = $realt_id;
-                // $announcement->public_date = $desc[0]->find('span')[$spanNumber-1]->text() ;
+                $announcement->public_date = $desc[0]->find('span')[$spanNumber-1]->text() ;
                 $announcement->title = $item->find('.teaser-title')[0]->text();
                 $announcement->desriptions = $item->find('.info-text')[0]->text();
                 $announcement->image_url = $item->find('.lazy')[0]->attr('data-original');
+                if ($announcement->image_url === 'typo3temp/pics/e4/b6/e4b6c05034170ddc52c59b6247744950.png') {
+                    $announcement->image_url = null;
+                }
                 if ($item->has('.negotiable')) {
                     $announcement->price = null;
                 } else {
@@ -75,13 +90,15 @@ class Parser {
                     $announcement = $this->getAnnouncement($announcement);
                 }
 
+                # add webSocket
                 $announcement->save();
 
                 $resp[$marker][] = $announcement;
             } 
         }
 
-        return $resp;
+        $this->part++;
+        dispatch( (new ParsingJob(null ,$this)) );
     }
 
     private function getAnnouncement(Announcement $announcement) 
@@ -115,11 +132,18 @@ class Parser {
         }
 
         $announcement->isParse = true;
-        // $announcement->rows = $arr;
-        // $announcement->testCount = count($rows);
-        // $announcement->url = $this->baseURL.$this->realtPrefix.'/object/'.$announcement->realt_id.'/';
 
         return $announcement;
     }
-}
 
+    private function getTotalToParse() 
+    {
+        $this->total = (int)$this->document->find('.mt-sm')[1]->find('.fs-small')[0]->find('strong')[0]->text();
+    }
+
+    private function getDocument() 
+    {
+        $this->document = new Document($this->baseURL.$this->realtPrefix.$this->partText.$this->part, true);
+    }
+
+}

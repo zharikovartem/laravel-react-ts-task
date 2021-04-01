@@ -23,6 +23,7 @@ let mapStateToProps = (state:AppStateType) => {
         parsingPage: state.parser.parsingPage,
         totalAnnouncementCountToParsing: state.parser.totalAnnouncementCountToParsing,
         announcementsList: state.parser.announcementsList,
+        totalAnnouncementCount: state.parser.totalAnnouncementCount
     }
 }
 
