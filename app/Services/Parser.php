@@ -12,7 +12,7 @@ class Parser {
     private $partText = '?page=';
     private $part;
 
-    public function __construct($class, $part = 2)
+    public function __construct($class, $part = 0)
     {
         $this->ownFieldList = $class->getOwnFieldList();
         $this->realtPrefix = $class->getPrefix();
@@ -57,7 +57,7 @@ class Parser {
                 }
 
                 $announcement->realt_id = $realt_id;
-                $announcement->public_date = $desc[0]->find('span')[$spanNumber-1]->text() ;
+                // $announcement->public_date = $desc[0]->find('span')[$spanNumber-1]->text() ;
                 $announcement->title = $item->find('.teaser-title')[0]->text();
                 $announcement->desriptions = $item->find('.info-text')[0]->text();
                 $announcement->image_url = $item->find('.lazy')[0]->attr('data-original');
@@ -70,9 +70,12 @@ class Parser {
                     }
                 }
                 
-                $announcement->save(); // не делать save 2 раза
                 
-                $announcement = $this->getAnnouncement($announcement);
+                if (!$announcement->isParse) {
+                    $announcement = $this->getAnnouncement($announcement);
+                }
+
+                $announcement->save();
 
                 $resp[$marker][] = $announcement;
             } 
@@ -87,7 +90,7 @@ class Parser {
         $document = new Document($this->baseURL.$this->realtPrefix.'/object/'.$announcement->realt_id.'/', true);
         $rows = $document->find('tr');
 
-        $announcement->testCount = 0;
+        // $announcement->testCount = 0;
         $arr = array();
 
         foreach ($rows as $key => $row) {
@@ -100,13 +103,21 @@ class Parser {
                 ) {
                 // $announcement->$ownFieldList[trim($row->find('td')[0]->text())] = $ownFieldList[$row->find('td')[1]->text()];
                 // $announcement->testCount++;
-                $arr[] = $row->find('td')[0]->text();
+                $rowKey = trim( $row->find('td')[0]->text() );
+                
+                if($rowKey && in_array($rowKey, $ownFieldList) ) {
+                    $val = array_search( $rowKey, $ownFieldList );
+                    $announcement->$val = trim( $row->find('td')[1]->text() );
+                } else {
+                    $arr[] = $rowKey;
+                }
             }
         }
 
-        $announcement->rows = $arr;
-        $announcement->testCount = count($rows);
-        $announcement->url = $this->baseURL.$this->realtPrefix.'/object/'.$announcement->realt_id.'/';
+        $announcement->isParse = true;
+        // $announcement->rows = $arr;
+        // $announcement->testCount = count($rows);
+        // $announcement->url = $this->baseURL.$this->realtPrefix.'/object/'.$announcement->realt_id.'/';
 
         return $announcement;
     }
