@@ -1,4 +1,4 @@
-import { Avatar, Button, List, Pagination, Spin } from 'antd'
+import { Avatar, Button, Empty, List, Pagination, Spin } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { LoadingOutlined } from '@ant-design/icons'
 import { OmitProps } from 'antd/lib/transfer/ListBody'
@@ -6,13 +6,19 @@ import {MainPropsType} from './MainContainer'
 
 
 const Main: React.FC<MainPropsType> = (props) => {
-    useEffect( () => {
-        // Получить список объявлений
-    },[])
-
     const [pageSize, setPageSize] = useState<number>(10)
     const [page, setPage] = useState<number>(1)
     const [isParse, setIsParse] = useState(false)
+
+    useEffect( () => {
+        console.log('useEffect')
+        props.getAnnouncements({
+            count: 10,
+            page: page-1,
+        })
+    },[])
+
+    
 
     const startParse = () => {
         setIsParse(!isParse)
@@ -20,11 +26,21 @@ const Main: React.FC<MainPropsType> = (props) => {
     }
 
     const onShowSizeChange = (current: number, size: number) => {
+        console.log('onShowSizeChange')
         setPageSize(size)
+        // props.getAnnouncements({
+        //     count: size,
+        //     page: page-1,
+        // })
     }
 
-    const onChange = (page: number, pageSize: number | undefined) => {
+    const onChange = (page: number, pageSizeVal: number | undefined) => {
+        console.log('onChange', pageSizeVal)
         setPage(page)
+        props.getAnnouncements({
+            count: pageSizeVal ? pageSizeVal : pageSize,
+            page: page-1,
+        })
     }
 
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
@@ -41,31 +57,38 @@ const Main: React.FC<MainPropsType> = (props) => {
 
             <PaginationComponent onShowSizeChange={onShowSizeChange} pageSize={pageSize} onChange={onChange} current={page}/>
 
+            {props.announcementsList.length !== 0 ?
             <List
                 header={<h4>Список объявлений</h4>}
                 bordered
                 size="small"
                 itemLayout="horizontal"
-                dataSource={data}
+                dataSource={props.announcementsList}
                 renderItem={item => (
                     <List.Item>
                         <List.Item.Meta
-                            avatar={<Avatar src="https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png" />}
+                            avatar={<Avatar shape="square" size="large" src={item.image_url} />}
                             title={<a href="https://ant.design">{item.title}</a>}
-                            description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                            description={item.desriptions}
                         />
                     </List.Item>
                 )}
             />
+            : <Empty /> }
 
             <PaginationComponent onShowSizeChange={onShowSizeChange} pageSize={pageSize} onChange={onChange} current={page}/>
 
             
-            <li>Создать абстракцию</li>
-            <li>Создать модель</li>
+            <li><s>Создать абстракцию</s></li>
+            <li><s>Создать модель</s></li>
             <li>Создать джоб</li>
             <li>Создать парсер</li>
             <li>Пробежать по вложенностям</li>
+            <li>Ограничеть время и кол-во проходов</li>
+            <br/>
+            <li>Добавить params в index()</li>
+            <li>Реализовать отображение</li>
+            <li>Реализовать пагинацию</li>
 
         </div>
     )

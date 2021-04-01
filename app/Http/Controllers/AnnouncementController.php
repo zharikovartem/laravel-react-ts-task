@@ -11,11 +11,33 @@ class AnnouncementController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Announcement::get(), 200);
+        $role = $request->sort;
+        // count
+        // page
+        $announcementsList = Announcement::
+        offset($request->count*$request->page)
+        ->limit($request->count)
+        ->when($role, function ($query, $role) {
+            return $query->orderBy('id', 'desc');
+        })
+        ->get();
+        return response()->json([
+            'announcementsList'=>$announcementsList,
+            'count'=>Announcement::count(),
+            // 'page'=>$request->page,
+            // 'query'=>$request->query,
+            // 'server'=>$request->server,
+            // 'files'=>$request->files,
+            // 'cookies'=>$request->cookies,
+            // 'headers'=>$request->headers,
+            // 'path1'=>$request->path1,
+            // 'ofset'=>$request->ofset,
+        ], 200);
     }
 
     /**

@@ -22,4 +22,9 @@ Route::post('register', 'Api\Auth\RegisterController@register');
 Route::get('authMe/{token}', 'Api\Auth\AuthController@authMe');
 
 Route::get('startAnnouncementsParsing/{object}/{part?}', 'AnnouncementController@startAnnouncementsParsing');
-Route::resource('providers', 'AnnouncementController');
+
+
+# тестим GET
+Route::get('announcements','AnnouncementController@index');
+
+Route::resource('announcements', 'AnnouncementController');

@@ -1,7 +1,8 @@
 import {connect} from 'react-redux'
 import Main from './Main'
 import { AppStateType } from '../../redux/store'
-import {startAnnouncementsParsing} from './../../redux/parserReducer'
+import {startAnnouncementsParsing, getAnnouncements} from './../../redux/parserReducer'
+import { GetAnnouncementsParamsType } from '../../api/parserAPI'
 // import { RegisterFormType } from '../../api/authAPI'
 
 type OwnMainPropsType = {
@@ -11,7 +12,8 @@ type OwnMainPropsType = {
 type MapPropsType = ReturnType<typeof mapStateToProps>
 
 type MapDispatchPropsType = {
-    startAnnouncementsParsing: ()=>void
+    startAnnouncementsParsing: ()=>void,
+    getAnnouncements: (params: GetAnnouncementsParamsType)=>void
 }
 
 export type MainPropsType = MapPropsType & MapDispatchPropsType & OwnMainPropsType
@@ -19,12 +21,13 @@ export type MainPropsType = MapPropsType & MapDispatchPropsType & OwnMainPropsTy
 let mapStateToProps = (state:AppStateType) => {
     return {
         parsingPage: state.parser.parsingPage,
-        totalAnnouncementCountToParsing: state.parser.totalAnnouncementCountToParsing
+        totalAnnouncementCountToParsing: state.parser.totalAnnouncementCountToParsing,
+        announcementsList: state.parser.announcementsList,
     }
 }
 
 export default connect<MapPropsType, MapDispatchPropsType, OwnMainPropsType, AppStateType>(mapStateToProps, 
-    {startAnnouncementsParsing}) 
+    {startAnnouncementsParsing, getAnnouncements}) 
     (Main)
     
 
