@@ -23,7 +23,7 @@ class ParsingJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($classInstanse, $parserInstanse = false)
+    public function __construct($classInstanse, $parserInstanse = null)
     {
         $this->classInstanse = $classInstanse;
 
@@ -40,8 +40,10 @@ class ParsingJob implements ShouldQueue
     public function handle()
     {
         // Parser::startParse();
-        $this->parserInstanse->getAnnouncementList();
+        if ($this->parserInstanse) {
+            $this->parserInstanse->getAnnouncementList();
 
-        info($this->parserInstanse->part);
+            info($this->parserInstanse->part);
+        }
     }
 }

@@ -51,11 +51,6 @@ let AppContainer = compose<React.ComponentType>(
     withRouter,
     connect(mapStateToProps, { getAuthUserData }))(AppRouter)
 
-let ws = new WebSocket('ws://127.0.0.1:2346')
-ws.addEventListener('message', (e)=> {
-    console.log('message: ',e.data)
-})
-
 const App: React.FC = () => {
     return (
         <BrowserRouter>

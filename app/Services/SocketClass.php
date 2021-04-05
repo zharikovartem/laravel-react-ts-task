@@ -23,4 +23,3 @@ $ws_worker->onClose = function ($connection) {
 };
 
 Worker::runAll();
-//  php App\Services\SocketClass.php

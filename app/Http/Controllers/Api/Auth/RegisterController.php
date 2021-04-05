@@ -44,39 +44,20 @@ class RegisterController extends Controller
     {
         $validator = $this->validator($request->all());
 
-        // echo $success['check'] = User::create($input);
-
         if($validator->fails()){
-            // return '!!!!!!!!!!!!!';
-            return response()->json($validator->errors(), 404);
-            // return $this->sendError('Validation Error.', $validator->errors());       
+            return response()->json($validator->errors(), 404);    
         }
         
 
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
-        // $input['status'] = 'guest';
-        $input['view_settings'] = '{
-            "ToDo": {
-                "timeEnd": "23:00",
-                "timeStart": "00:00",
-                "completeSingle": true,
-                "timeScaleSingle": true,
-                "completeInrerval": true,
-                "timeScaleInrerval": false
-            }
-        }';
-        
-        // $success['check'] = User::create($input);
+
         $user = User::create($input);
         $success['user'] =  $user;
-        // $success['token'] =  $user->createToken('MyApp')->accessToken;
 
         $user->setRememberToken($token = Str::random(60));
         $success['token'] =  $user->getRememberToken();
 
         return response()->json($success, 200);
-        // }
-        // return $this->sendResponse($success, 'User register successfully.');
     }
 }

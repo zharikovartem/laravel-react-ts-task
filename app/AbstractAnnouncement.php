@@ -28,8 +28,6 @@ abstract class AbstractAnnouncement extends Model
     ];
 
     public function getDescriptions() {
-        // var_dump($objectInstance);
-        # создаем job для получения описаний
         return $this->announcementType;
     }
 
@@ -39,7 +37,6 @@ abstract class AbstractAnnouncement extends Model
 
     public function getOwnFieldList()
     {
-        // $this->$fillable = 'newFiels';
         return $this->ownFillable;
     }
 

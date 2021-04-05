@@ -112,12 +112,6 @@ class AnnouncementController extends Controller
 
         $className = "App\\".$object;
         $test = new $className();
-
-        // dispatch(new AnnouncementsParsingJob([
-        //     'part'=>$part,
-        // ]));
-        // $className = 'App/' . $object;
-
         $parser = new Parser($test);
         ;
 
@@ -126,7 +120,6 @@ class AnnouncementController extends Controller
             'totalCount'=>$parser->startParse(),
             'getOwnFieldList'=>$test->getOwnFieldList(),
             'getFillable'=>$test->getFillable(),
-            // 'parser'=>$parser->startParse()
         ], 200);
     }
 }

@@ -33,9 +33,6 @@ class Parser {
 
     public function startParse()
     {
-        // $parser = new Parser(new Announcement(), 1);
-        // $parser->getAnnouncementList();
-        // $this->getAnnouncementList();
         dispatch( (new ParsingJob(null ,$this)) );
         return [
             'count'=>$this->total,
@@ -107,19 +104,11 @@ class Parser {
         $document = new Document($this->baseURL.$this->realtPrefix.'/object/'.$announcement->realt_id.'/', true);
         $rows = $document->find('tr');
 
-        // $announcement->testCount = 0;
         $arr = array();
 
         foreach ($rows as $key => $row) {
             $cols = $row->find('td');
-            if ( 
-                    count($cols) > 1
-                    // && isset(
-                    //     $ownFieldList[ trim($row->find('td')[0]->text()) ]
-                    // )
-                ) {
-                // $announcement->$ownFieldList[trim($row->find('td')[0]->text())] = $ownFieldList[$row->find('td')[1]->text()];
-                // $announcement->testCount++;
+            if (count($cols) > 1) {
                 $rowKey = trim( $row->find('td')[0]->text() );
                 
                 if($rowKey && in_array($rowKey, $ownFieldList) ) {
