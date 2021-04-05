@@ -94,8 +94,11 @@ class Parser {
             } 
         }
 
-        $this->part++;
-        dispatch( (new ParsingJob(null ,$this)) );
+        if (count($table) > 0) {
+            $this->part++;
+            dispatch( (new ParsingJob(null ,$this)) );
+        }
+        
     }
 
     private function getAnnouncement(Announcement $announcement) 
@@ -127,7 +130,7 @@ class Parser {
 
     private function getTotalToParse() 
     {
-        $this->total = (int)$this->document->find('.mt-sm')[1]->find('.fs-small')[0]->find('strong')[0]->text();
+        $this->total = (int)explode('из ', $this->document->find('.mt-sm')[1]->find('.fs-small')[0]->find('strong')[1]->text())[1];
     }
 
     private function getDocument() 

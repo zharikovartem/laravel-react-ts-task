@@ -85,4 +85,20 @@ export const parserAPI = {
             return null
         })
       },
+      getCurrentAnnouncement(announcementId: number) {
+        return instance.get<GetAnnouncementsResponseType>("getCurrentAnnouncement/"+announcementId)
+        .then((response) => {
+            console.log('getCurrentAnnouncement: ', response)
+            return response
+        } ) 
+        .catch(err => {
+            if (err.response) {
+                console.log('getAnnouncements ERROR', err.response)
+                return err.response
+            } else if (err.request) {
+            } else {
+            }
+            return null
+        })
+      }
 }

@@ -13,6 +13,7 @@ import LoginContainer from './Login/LoginContainer'
 import RegisterContainer from './Register/RegisterContainer'
 import MainContainer from './Main/MainContainer'
 import {getAuthUserData} from './../redux/authReducer'
+import ItemPage from './Main/ItemPage/ItemPageContainer'
 
 type MapPropsType = ReturnType<typeof mapStateToProps>
 
@@ -34,6 +35,8 @@ const AppRouter: React.FC<MapPropsType & DispatchPropsType> = (props) => {
                 <Route path={'/register'} component={RegisterContainer} />
                 <Route exact path={'/'}
                         render={() => <MainContainer />} />
+                <Route path={'/:userId'}
+                    component={ItemPage} />
                 <Route path={'*'} component={Page404} />
             </Switch>
         </Layout>

@@ -76,6 +76,13 @@ export const getAnnouncements = (params: GetAnnouncementsParamsType):ThunkType =
     }
 }
 
+export const getCurrentAnnouncement = (announcementId: number):ThunkType => {
+    return async (dispatch, getState) => {
+        let response = await parserAPI.getCurrentAnnouncement(announcementId)
+        dispatch(actions.setAnnouncementsList(response.data.announcement))
+        // dispatch(actions.setTotalAnnouncementCount(response.data.count))
+    }
+}
 export default parserReducer
 
 type ActionsTypes = InferActionsTypes<typeof actions>

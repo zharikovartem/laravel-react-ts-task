@@ -17,6 +17,7 @@ class AnnouncementController extends Controller
     public function index(Request $request)
     {
         $role = $request->sort;
+        
         // count
         // page
         $announcementsList = Announcement::
@@ -120,6 +121,19 @@ class AnnouncementController extends Controller
             'totalCount'=>$parser->startParse(),
             'getOwnFieldList'=>$test->getOwnFieldList(),
             'getFillable'=>$test->getFillable(),
+        ], 200);
+    }
+
+    /**
+     * 
+     *
+     * @param  \App\Announcement  $announcement
+     * @return \Illuminate\Http\Announcement
+     */
+    public function getCurrentAnnouncement(Announcement $announcement)
+    {
+        return response()->json([
+            'announcement'=>[$announcement]
         ], 200);
     }
 }

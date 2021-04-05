@@ -1,8 +1,8 @@
 import { Avatar, Button, Empty, List, message, Pagination, Spin } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { LoadingOutlined } from '@ant-design/icons'
-import { OmitProps } from 'antd/lib/transfer/ListBody'
 import {MainPropsType} from './MainContainer'
+import { Link } from 'react-router-dom'
 
 
 const Main: React.FC<MainPropsType> = (props) => {
@@ -78,7 +78,7 @@ const Main: React.FC<MainPropsType> = (props) => {
                     >
                         <List.Item.Meta
                             // avatar={<Avatar shape="square" size="large" src={item.image_url} alt="123"/>}
-                            title={<a href="https://ant.design">{item.title}</a>}
+                            title={<Link to={'/'+item.id}>{item.title}</Link>}
                             description={item.desriptions}
                         />
                     </List.Item>

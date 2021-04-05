@@ -24,7 +24,9 @@ Route::get('authMe/{token}', 'Api\Auth\AuthController@authMe');
 Route::get('startAnnouncementsParsing/{object}/{part?}', 'AnnouncementController@startAnnouncementsParsing');
 
 
-# тестим GET
 Route::get('announcements','AnnouncementController@index');
+
+# getCurrentAnnouncement
+Route::get('getCurrentAnnouncement/{announcement}','AnnouncementController@getCurrentAnnouncement');
 
 Route::resource('announcements', 'AnnouncementController');
