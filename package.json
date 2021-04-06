@@ -31,6 +31,7 @@
         "antd": "^4.15.0",
         "antd-mobile": "^2.3.4",
         "formik": "^2.2.6",
+        "moment": "^2.29.1",
         "react-device-detect": "^1.17.0",
         "react-redux": "^7.2.3",
         "react-router-dom": "^5.2.0",

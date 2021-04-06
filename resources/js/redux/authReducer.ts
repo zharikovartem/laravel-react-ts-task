@@ -7,16 +7,14 @@ type InitialStateType = {
     user: UserType | null,
     remember_token: string | null,
     isAuth: boolean
-    viewSettings: any
+    isAuthChecked: boolean,
     authError: null | string
 }
-let initialState: InitialStateType = {
+export let initialState: InitialStateType = {
     user: null,
     remember_token: null,
     isAuth: false,
-    viewSettings: {
-        ToDo: {}
-    },
+    isAuthChecked: false,
     authError: null
 }
 
@@ -47,16 +45,22 @@ const authReducer = (state = initialState, action: ActionsTypes): InitialStateTy
         //     }
         //     return {...state, viewSettings: viewSettings}
         case 'SN/AUTH/SET_USER_DATA':
-            if (action.user !== null) {
+            if (action.user) {
+                console.log('SET_USER_DATA true', action.user)
                 return { ...state, 
                             user: action.user, 
                             remember_token: action.remember_token, 
-                            // isAuth: true, 
+                            isAuth: true, 
+                            isAuthChecked: true
                             // viewSettings: JSON.parse(action.user.view_settings),
                             // authError: null
                         }
             } else {
-                return initialState;
+                return {
+                    ...initialState,
+                    isAuthChecked: true,
+                    isAuth: false, 
+                };
             }
             
         case 'SN/AUTH/LOGOUT':
@@ -92,10 +96,12 @@ export const getAuthUserData = (): ThunkType => {
         let response = await authAPI.authMe()
 
         if (response !== null) {
-            if (response.data.resultCode === 0) {
+            console.log('getAuthUserData: ', response)
+            // if (response.data.resultCode === 0) {
                 dispatch(actions.setAuthUserData(response.data.user, response.data.remember_token))
-            } else {
-            }
+            // } else {
+            //     console.log('!!!')
+            // }
         }
     }
 }

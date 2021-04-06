@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import { BrowserRouter, Redirect, Route, Switch, withRouter, useLocation, Link } from 'react-router-dom'
 import { connect, Provider } from 'react-redux'
 import store, { AppStateType } from './../redux/store'
@@ -12,7 +12,7 @@ import Menu from './Menu/Menu'
 import LoginContainer from './Login/LoginContainer'
 import RegisterContainer from './Register/RegisterContainer'
 import MainContainer from './Main/MainContainer'
-import {getAuthUserData} from './../redux/authReducer'
+import { getAuthUserData } from './../redux/authReducer'
 import ItemPage from './Main/ItemPage/ItemPageContainer'
 
 type MapPropsType = ReturnType<typeof mapStateToProps>
@@ -24,21 +24,29 @@ type DispatchPropsType = {
 }
 
 const AppRouter: React.FC<MapPropsType & DispatchPropsType> = (props) => {
-    useEffect( () => {
+    useEffect(() => {
+        console.log('useEffect: ', props)
         props.getAuthUserData()
-    },[])
-    return(
+    }, [])
+    useEffect(() => {
+    }, [props.isAuthChecked])
+    return (
         <Layout>
             <Menu />
-            <Switch>
-                <Route path={'/login'} component={LoginContainer} />
-                <Route path={'/register'} component={RegisterContainer} />
-                <Route exact path={'/'}
+            {props.isAuthChecked ?
+                <Switch>
+                    <Route path={'/login'} component={LoginContainer} />
+                    <Route path={'/register'} component={RegisterContainer} />
+                    <Route exact path={'/'}
                         render={() => <MainContainer />} />
-                <Route path={'/:userId'}
-                    component={ItemPage} />
-                <Route path={'*'} component={Page404} />
-            </Switch>
+                    <Route path={'/:userId'}
+                        component={ItemPage} />
+                    <Route path={'*'} component={Page404} />
+                </Switch>
+                :
+                <Spin size="large" />
+            }
+
         </Layout>
     )
 }
@@ -46,7 +54,8 @@ const AppRouter: React.FC<MapPropsType & DispatchPropsType> = (props) => {
 const mapStateToProps = (state: AppStateType) => ({
     // initialized: state.app.initialized,
     // appLocation: state.app.location,
-    // isAuth: state.auth.isAuth,
+    isAuth: state.auth.isAuth,
+    isAuthChecked: state.auth.isAuthChecked,
     // userStatus: state.auth.user?.status
 })
 
@@ -68,7 +77,7 @@ const App: React.FC = () => {
 
 export default App
 
-const Page404:React.FC = () => {
+const Page404: React.FC = () => {
     return (
         <Result
             status="404"

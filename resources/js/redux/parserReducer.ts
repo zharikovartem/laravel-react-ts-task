@@ -1,12 +1,12 @@
 import { Dispatch } from 'redux'
 import { BaseThunkType, InferActionsTypes } from './store'
-import { GetAnnouncementsResponseType, GetAnnouncementsParamsType, parserAPI } from "./../api/parserAPI"
+import { GetAnnouncementsResponseType, GetAnnouncementsParamsType, parserAPI, AnnouncementType } from "./../api/parserAPI"
 
 type InitialStateType = {
     parsingPage: number,
     totalAnnouncementCountToParsing: number | '???',
     totalAnnouncementCount: number,
-    announcementsList: Array<any>
+    announcementsList: Array<AnnouncementType>
 }
 let initialState: InitialStateType = {
     parsingPage: 0,
@@ -54,7 +54,7 @@ const parserReducer = (state = initialState, action: ActionsTypes): InitialState
 export const actions = {
     setAuthError: (error: string) => ({type: 'SN/AUTH/SET_AUTH_ERROR', error } as const),
     setParsingPage: (part: number) => ({type: 'SN/PARSER/SET_PARSING_PAGE', part } as const),
-    setAnnouncementsList: (announcementsList: Array<any>) => ({type: 'SN/PARSER/SET_AANOUNCRMENT_LIST', announcementsList } as const),
+    setAnnouncementsList: (announcementsList: Array<AnnouncementType>) => ({type: 'SN/PARSER/SET_AANOUNCRMENT_LIST', announcementsList } as const),
     setTotalAnnouncementCount: (count: number) => ({type: 'SN/PARSER/SET_TOTAL_ANNOUNCEMENT_COUNT', count}as const),
     setParsingCount: (count: number) => ({type: 'SN/PARSER/SET_PARSING_COUNT', count}as const),
 }
